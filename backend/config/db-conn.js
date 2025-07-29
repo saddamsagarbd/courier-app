@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-let isConnected;
+let isConnected = false;
 
 const timeout = (ms) =>
   new Promise((_, reject) =>

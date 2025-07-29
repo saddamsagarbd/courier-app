@@ -14,6 +14,11 @@ const userSchema = new mongoose.Schema(
       required: true,
       lowercase: true,
     },
+    phone: {
+      type: String,
+      unique: true,
+      required: true,
+    },
     password: {
       type: String,
       required: true,
@@ -22,11 +27,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["admin", "customer", "agent"],
       default: "customer",
-    },
-    phone: {
-      type: String,
-      unique: true,
-      required: true,
     },
     address: String,
     is_active: {
