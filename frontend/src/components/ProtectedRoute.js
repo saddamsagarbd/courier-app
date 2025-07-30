@@ -4,10 +4,10 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 const ProtectedRoute = () => {
-    const { user, loading } = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
 
-    if (loading) {
-        return <div>Loading...</div>; // Or a spinner
+    if (!user) {
+      return <div>Loading...</div>; // Or a spinner
     }
 
     return user ? <Outlet /> : <Navigate to="/" replace />;

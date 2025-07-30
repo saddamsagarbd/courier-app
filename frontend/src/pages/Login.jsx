@@ -20,8 +20,7 @@ export default function Login() {
     setIsSubmitting(true);
 
     try {
-      const res = await login(form);
-      console.log(res);
+      await login(form);
       navigate("/dashboard"); // or role-based routing later
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
@@ -31,7 +30,6 @@ export default function Login() {
   };
 
   useEffect(()=> {
-    console.log(user);
     if (user) {
       navigate("/dashboard");
     }

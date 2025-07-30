@@ -1,32 +1,24 @@
 import Parcel from "../models/Parcel.js";
 import User from "../models/User.js";
 
+function generateTrackingNumber() {
+  return "TRK" + Math.random().toString(36).substr(2, 9).toUpperCase();
+}
+
 export const createParcel = async (req, res) => {
     try {
-        const {
-            pickupAddress,
-            deliveryAddress,
-            parcelSize,
-            parcelType,
-            paymentType,
-            codAmount
-        } = req.body;
-
-        const parcel = await Parcel.create({
-            customer: req.user.id, // from auth middleware
-            pickupAddress,
-            deliveryAddress,
-            parcelSize,
-            parcelType,
-            paymentType,
-            codAmount: paymentType === "cod" ? codAmount : 0
+        const parcel = new Parcel({
+          ...req.body,
+          userId: req.user.id,
+          trackingNumber: generateTrackingNumber(),
+          status: "pending",
         });
 
-        res.status(201).json({
-            status: true,
-            message: "Parcel booking created successfully",
-            parcel
-        });
+        await parcel.save();
+
+        // TODO: Trigger email notification
+
+        res.status(201).json(parcel);
     } catch (error) {
         res.status(500).json({ status: false, message: error.message });
     }
@@ -35,12 +27,13 @@ export const createParcel = async (req, res) => {
 export const getBookingByUser = async (req, res) => {
     try {
 
-        const query = { customer: req.user.id };
+        const query = { userId: req.user.id };
 
         const user = await User.findOne({ _id: req.user.id });
         if (!user) return res.status(404).json({ message: "User not found" });
 
-        const projection = "pickupAddress deliveryAddress parcelSize parcelType status createdAt";
+        const projection =
+          "trackingNumber pickupAddress recipientName recipientPhone dimensions codAmount specialInstructions deliveryAddress parcelSize parcelType status paymentMethod createdAt";
 
         const [totalBooking, parcels] = await Promise.all([
             Parcel.countDocuments(query),

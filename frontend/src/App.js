@@ -5,6 +5,8 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
+import ParcelBooking from "./components/ParcelBooking";
+import MyBookings from "./pages/MyBookings";
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
         {/* Protected routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/book-parcel" element={<ParcelBooking />} />
+          <Route path="/my-parcels" element={<MyBookings />} />
           {/* <Route path="/profile" element={<Profile />} /> */}
         </Route>
 

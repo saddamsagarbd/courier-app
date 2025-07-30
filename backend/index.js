@@ -15,16 +15,16 @@ import { connA } from "./config/db-conn.js";
 const app = express();
 const server = http.createServer(app); 
 
-import { setupSocket } from "./socket.js";
-const io = setupSocket(server);
+// import { setupSocket } from "./socket.js";
+// const io = setupSocket(server);
 
 // Example socket event
-io.on("connection", (socket) => {
-  console.log("Socket connected:", socket.id);
-  socket.on("disconnect", () => {
-    console.log("Socket disconnected:", socket.id);
-  });
-});
+// io.on("connection", (socket) => {
+//   console.log("Socket connected:", socket.id);
+//   socket.on("disconnect", () => {
+//     console.log("Socket disconnected:", socket.id);
+//   });
+// });
 
 // Security middleware
 app.use(helmet());

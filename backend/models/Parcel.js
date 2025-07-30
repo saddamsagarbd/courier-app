@@ -1,47 +1,41 @@
-import mongoose from 'mongoose';
+// backend/models/Parcel.js
+import mongoose from "mongoose";
 
 const parcelSchema = new mongoose.Schema({
-  customer: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  pickupAddress: {
-    type: String,
-    required: true
-  },
-  deliveryAddress: {
-    type: String,
-    required: true
-  },
-  parcelSize: {
-    type: String,
-    enum: ['small', 'medium', 'large'],
-    required: true
-  },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  trackingNumber: { type: String, required: true, unique: true },
+  pickupAddress: { type: String, required: true },
+  deliveryAddress: { type: String, required: true },
+  recipientName: { type: String, required: true },
+  recipientPhone: { type: String, required: true },
   parcelType: {
     type: String,
-    enum: ['document', 'box', 'fragile', 'other'],
-    required: true
+    enum: ["document", "package", "fragile", "perishable"],
+    default: "document",
   },
-  paymentType: {
+  weight: { type: Number, required: true }, // in kg
+  dimensions: { type: String }, // e.g., "10x10x10"
+  paymentMethod: {
     type: String,
-    enum: ['cod', 'prepaid'],
-    required: true
+    enum: ["prepaid", "cod"],
+    required: true,
   },
-  codAmount: {
-    type: Number,
-    default: 0
-  },
+  codAmount: { type: Number, default: 0 },
+  specialInstructions: { type: String },
   status: {
     type: String,
-    enum: ['Pending', 'Assigned', 'Picked Up', 'In Transit', 'Delivered', 'Failed'],
-    default: 'Pending'
+    enum: ["pending", "picked-up", "in-transit", "delivered", "failed"],
+    default: "pending",
   },
-  currentLocation: {
-    lat: Number,
-    lng: Number
-  },
-}, { timestamps: true });
+  assignedAgent: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date },
+});
 
-export default mongoose.model('Parcel', parcelSchema);
+parcelSchema.pre("save", function (next) {
+  this.updatedAt = Date.now();
+  next();
+});
+
+const Parcel = mongoose.model("Parcel", parcelSchema);
+export default Parcel;

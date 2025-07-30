@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
-
   try {
     const { name, email, phone, password, role } = req.body;
     const existing = await User.findOne({ email });
@@ -19,24 +18,21 @@ export const register = async (req, res) => {
       password: hashedPassword,
       role,
     });
-    res
-      .status(201)
-      .json({ 
-        status: true,
-        message: "User registered successfully", 
-        userId: user._id 
-      });
+    res.status(201).json({
+      status: true,
+      message: "User registered successfully",
+      userId: user._id,
+    });
   } catch (err) {
-    res.status(500).json({ 
+    res.status(500).json({
       status: false,
       data: req.body,
-      message: err.message
+      message: err.message,
     });
   }
 };
 
 export const login = async (req, res) => {
-
   console.log(req.body);
 
   const { email, password } = req.body;
@@ -51,18 +47,20 @@ export const login = async (req, res) => {
 
     const token = jwt.sign(
       { id: user._id, role: user.role },
-        process.env.JWT_SECRET_KEY,
+      process.env.JWT_SECRET_KEY,
       {
         expiresIn: "1d",
       }
     );
 
-    res
-      .status(200)
-      .json({
-        token,
-        user: { id: user._id, name: user.name, role: user.role },
-      });
+    res.status(200).json({
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        role: user.role,
+      },
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
