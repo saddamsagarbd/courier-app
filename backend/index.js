@@ -15,13 +15,8 @@ import { connA } from "./config/db-conn.js";
 const app = express();
 const server = http.createServer(app); 
 
-import { Server } from "socket.io";
-const io = new Server(server, {
-  cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
-    methods: ["GET", "POST"],
-  },
-});
+import { setupSocket } from "./socket.js";
+const io = setupSocket(server);
 
 // Example socket event
 io.on("connection", (socket) => {
