@@ -1,4 +1,3 @@
-// backend/models/Parcel.js
 import mongoose from "mongoose";
 
 const parcelSchema = new mongoose.Schema({
@@ -24,7 +23,7 @@ const parcelSchema = new mongoose.Schema({
   specialInstructions: { type: String },
   status: {
     type: String,
-    enum: ["pending", "picked-up", "in-transit", "delivered", "failed"],
+    enum: ["pending", "assigned", "picked-up", "in-transit", "delivered", "failed"],
     default: "pending",
   },
   assignedAgent: { type: mongoose.Schema.Types.ObjectId, ref: "User" },

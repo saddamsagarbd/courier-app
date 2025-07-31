@@ -5,6 +5,7 @@ const ParcelContext = createContext();
 
 export const ParcelProvider = ({ children }) => {
   const [parcels, setParcels] = useState([]);
+  const [agents, setAgents] = useState([]);
   const [totalParcels, setTotalParcels] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -56,9 +57,63 @@ export const ParcelProvider = ({ children }) => {
     }
   };
 
+  const fetchParcels = async () => {
+    const { data } = await axios.get(
+      `${process.env.REACT_APP_API_BASE_URL}/parcels/booked`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    setParcels(data);
+  };
+
+  const fetchAgents = async () => {
+    const { data } = await axios.get(
+      `${process.env.REACT_APP_API_BASE_URL}/parcels/agents`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    setAgents(data);
+  }
+  const assignAgent = async (parcelId, agentId) => {
+    try {
+      await axios.put(
+        `${process.env.REACT_APP_API_BASE_URL}/parcels/${parcelId}/assign-agent`,
+        { agentId },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      
+    } catch (error) {
+      console.error("Agent assignment failed", error);
+    }
+  };
+
   return (
     <ParcelContext.Provider
-      value={{ parcels, bookParcel, fetchMyParcels, loading, error }}
+      value={{
+        parcels,
+        agents,
+        totalParcels,
+        bookParcel,
+        fetchMyParcels,
+        fetchParcels,
+        fetchAgents,
+        assignAgent,
+        loading,
+        error,
+      }}
     >
       {children}
     </ParcelContext.Provider>

@@ -7,52 +7,39 @@ export const ROLE_CONFIG = {
       { label: "Pending COD", key: "pendingCOD", color: "purple" },
     ],
     quickActions: [
-      { name: "Manage Parcels", path: "/admin/parcels" },
-      { name: "Manage Agents", path: "/admin/agents" },
-      { name: "Reports", path: "/admin/reports" },
+      { name: "Dashboard", path: "/dashboard" },
+      { name: "Manage Parcels", path: "/parcels" },
+      { name: "Manage Agents", path: "/agents" },
+      { name: "Reports", path: "/reports" },
     ],
-    recentActivities: [
-      "New parcel assigned to Agent #123",
-      "COD payment received for order #456",
-      "New delivery agent registered",
-    ],
+    recentActivities: [],
   },
   agent: {
     dashboardTitle: "Delivery Agent Dashboard",
     stats: [
-      { label: "Assigned Parcels", key: "assignedParcels", color: "blue" },
+      { label: "Total Parcels", key: "totalParcels", color: "blue" },
       { label: "Delivered Today", key: "deliveredToday", color: "green" },
       { label: "Pending", key: "pendingDeliveries", color: "yellow" },
     ],
     quickActions: [
+      { name: "Dashboard", path: "/dashboard" },
       { name: "My Deliveries", path: "/agent/deliveries" },
       { name: "Delivery Map", path: "/agent/map" },
       { name: "Availability", path: "/agent/availability" },
     ],
-    recentActivities: [
-      "Picked up parcel #789 from customer",
-      "Delivered parcel #101 to destination",
-      "New parcel assigned to you",
-    ],
+    recentActivities: [],
   },
   customer: {
     dashboardTitle: "My Dashboard",
-    stats: [
-      { label: "Total Bookings", key: "totalBookings", color: "blue" },
-      { label: "Delivered", key: "deliveredParcels", color: "green" },
-      { label: "In Transit", key: "inTransitParcels", color: "yellow" },
-    ],
+    stats: [{ label: "Total Parcels", key: "totalParcels", color: "blue" }],
     quickActions: [
+      { name: "Dashboard", path: "/dashboard" },
       { name: "Book Parcel", path: "/book-parcel" },
       { name: "My Parcels", path: "/my-parcels" },
       { name: "Track Parcel", path: "/tracking" },
       { name: "Payment History", path: "/payments" },
     ],
-    recentActivities: [
-      "Parcel #789 picked up by agent",
-      "Parcel #101 delivered successfully",
-      "New parcel booking confirmed",
-    ],
+    recentActivities: [],
   },
 };
 
@@ -61,7 +48,7 @@ export const MOCK_DATA = {
   admin: {
     totalParcels: 42,
     activeAgents: 8,
-    pendingCOD: "₹12,450",
+    pendingCOD: "Tk. 12,450",
   },
   agent: {
     assignedParcels: 5,

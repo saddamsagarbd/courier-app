@@ -1,0 +1,67 @@
+import React, { useContext, useEffect } from "react";
+import { useParcel } from "../context/ParcelContext";
+import { AuthContext } from "../context/AuthContext";
+
+export default function ManageParcels() {
+  console.log("ManageParcels loaded");
+  const { parcels, agents, fetchParcels, fetchAgents, assignAgent } =
+    useParcel();
+  const { user, logout } = useContext(AuthContext);
+
+  useEffect(() => {
+    console.log("⚡ ManageParcels loaded");
+    fetchParcels();
+    fetchAgents();
+  }, []);
+
+  const assignDeliveryAgent = async (parcelId, agentId) => {
+    console.log("parcelId", parcelId);
+    await assignAgent(parcelId, agentId);
+    await fetchParcels(); // Refresh the list after assignment
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <table className="table-auto w-full border">
+          <thead>
+            <tr>
+              <th>Parcel ID</th>
+              <th>Receiver</th>
+              <th>Address</th>
+              <th>Assign Agent</th>
+            </tr>
+          </thead>
+          <tbody>
+            {parcels.map((parcel) => (
+              <tr key={parcel._id}>
+                <td>{parcel.trackingNumber}</td>
+                <td>
+                  {parcel.recipientName} ({parcel.recipientPhone})
+                </td>
+                <td>{parcel.deliveryAddress}</td>
+                <td>
+                  <select
+                    onChange={(e) =>
+                      assignDeliveryAgent(parcel._id, e.target.value)
+                    }
+                    value={parcel.assignedAgent || ""}
+                  >
+                    <option value="" disabled>
+                      Select agent
+                    </option>
+                    {agents.map((agent) => (
+                      <option key={agent._id} value={agent._id}>
+                        {agent.name}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </main>
+    </div>
+  );
+}

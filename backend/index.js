@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config({ path: './.env', quiet: true });
+dotenv.config({ path: "./.env", quiet: true });
 
 import express from "express";
 import cors from "cors";
@@ -8,12 +8,12 @@ import http from "http";
 import { connA } from "./config/db-conn.js";
 
 // Validate critical env vars
-['MONGO_URI'].forEach(variable => {
+["MONGO_URI"].forEach((variable) => {
   if (!process.env[variable]) throw new Error(`Missing ${variable} in .env`);
 });
 
 const app = express();
-const server = http.createServer(app); 
+const server = http.createServer(app);
 
 // import { setupSocket } from "./socket.js";
 // const io = setupSocket(server);
@@ -29,20 +29,20 @@ const server = http.createServer(app);
 // Security middleware
 app.use(helmet());
 
-const allowedOrigins = [
-  "http://localhost:3000"
-];
+const allowedOrigins = ["http://localhost:3000"];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 
 // Body parsers
 app.use(express.json());
@@ -50,7 +50,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // DB connection middleware
 connA()
-  .then(() => console.log('MongoDB connected'))
+  .then(() => console.log("MongoDB connected"))
   .catch((err) => {
     console.error("MongoDB connection failed:", err);
     process.exit(1);
@@ -59,8 +59,12 @@ connA()
 // Routes
 import authRoute from "./routes/authRoutes.js";
 import parcelRoutes from "./routes/parcelRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import userRoutes from "./routes/userRoute.js";
+app.use("/api", userRoutes);
 app.use("/api/auth", authRoute);
 app.use("/api/parcels", parcelRoutes);
+app.use("/api/admin", adminRoutes);
 
 // Server
 const PORT = process.env.PORT || 5000;
@@ -69,9 +73,9 @@ server.listen(PORT, () => {
 });
 
 // Graceful shutdown
-process.on('SIGTERM', () => {
+process.on("SIGTERM", () => {
   server.close(() => {
-    console.log('Server closed');
+    console.log("Server closed");
     process.exit(0);
   });
 });
