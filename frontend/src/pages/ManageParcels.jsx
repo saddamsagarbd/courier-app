@@ -1,18 +1,18 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useParcel } from "../context/ParcelContext";
-import { AuthContext } from "../context/AuthContext";
 
 export default function ManageParcels() {
-  console.log("ManageParcels loaded");
-  const { parcels, agents, fetchParcels, fetchAgents, assignAgent } =
-    useParcel();
-  const { user, logout } = useContext(AuthContext);
+  const { parcels, agents, fetchParcels, fetchAgents, assignAgent } = useParcel();
 
   useEffect(() => {
-    console.log("⚡ ManageParcels loaded");
-    fetchParcels();
-    fetchAgents();
+    try {
+      fetchParcels();
+      fetchAgents();
+
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   const assignDeliveryAgent = async (parcelId, agentId) => {

@@ -1,13 +1,18 @@
-import React, { useContext, useEffect } from "react";
+import io from "socket.io-client";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useParcel } from "../context/ParcelContext";
-import { AuthContext } from "../context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+const socket = io("http://localhost:5000", {
+  withCredentials: true,
+});
 
 export default function AssignedParcel() {
   const navigate = useNavigate();
+  const [status, setStatus] = useState("");
+  const [location, setLocation] = useState(null);
   const { parcels, fetchAssignedParcels, updateParcelStatus } = useParcel();
-  const { user, logout } = useContext(AuthContext);
 
   const statuses = [
     "assigned",
@@ -18,17 +23,35 @@ export default function AssignedParcel() {
   ];
 
   useEffect(() => {
-    fetchAssignedParcels();
+    try {
+      fetchAssignedParcels();
+
+      socket.on("parcelStatusUpdate", ({ newStatus, location }) => {
+        setStatus(newStatus);
+        if (location) setLocation(location);
+        console.log("Updated:", newStatus, location);
+      });
+
+      // Cleanup to prevent memory leaks
+      return () => {
+        socket.off("parcelStatusUpdate");
+      };
+      
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   const updateDeliveryStatus = async (parcelId, newStatus) => {
+    socket.emit("joinParcelRoom", parcelId);
+
     const currentParcel = parcels.find((p) => p._id === parcelId);
     if (!currentParcel) {
       toast.error("Parcel not found.");
       return;
     }
 
-    if (currentParcel.status === "assigned") {
+    if (newStatus === "assigned") {
       toast.error("Agent assigned. You cannot change its status.");
       return;
     }
@@ -37,13 +60,36 @@ export default function AssignedParcel() {
       toast.error("Parcel is already delivered. You cannot change its status.");
       return;
     }
-    try {
-      await updateParcelStatus(parcelId, newStatus);
-      toast.success("Status updated successfully.");
-      await fetchAssignedParcels(); // refresh state
-    } catch (error) {
-      toast.error("Failed to update status.");
+
+
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser.");
+      return;
     }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        const location = { latitude, longitude };
+
+        try {
+          await updateParcelStatus(parcelId, newStatus, location);
+          socket.emit("parcelStatusUpdate", {
+            parcelId,
+            newStatus,
+            location: location,
+          });
+          toast.success("Status updated successfully.");
+          await fetchAssignedParcels(); // refresh state
+        } catch (error) {
+          toast.error("Failed to update status.");
+        }
+      },
+      (error) => {
+        toast.error("Unable to retrieve your location.");
+        console.error(error);
+      }
+    );
   };
 
   const handleGetDirection = async (parcelId) => {
@@ -89,7 +135,9 @@ export default function AssignedParcel() {
                   </select>
                 </td>
                 <td>
-                  <button onClick={() => handleGetDirection(parcel._id)}>
+                  <button 
+                  className="bg-blue-600 text-white px-4 py-2 rounded text-sm"
+                  onClick={() => handleGetDirection(parcel._id)}>
                     Get Direction
                   </button>
                 </td>

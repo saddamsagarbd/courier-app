@@ -19,6 +19,7 @@ import AssignedParcel from "./pages/AssignedParcel";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ParcelRoutes from "./pages/ParcelRoutes";
+import ParcelTracker from "./components/ParcelTracker";
 
 function App() {
   return (
@@ -37,6 +38,10 @@ function App() {
               <Route
                 path="/get-direction/:parcelId"
                 element={<ParcelRoutes />}
+              />
+              <Route
+                path="/track-parcel/:parcelId"
+                element={<ParcelTracker />}
               />
               <Route path="/book-parcel" element={<ParcelBooking />} />
               <Route path="/my-parcels" element={<MyBookings />} />

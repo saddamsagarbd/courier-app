@@ -13,32 +13,33 @@ const Dashboard = () => {
   const [statsData, setStatsData] = useState(null);
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
-  const fetchDashboardStats = async () => {
-    try {
-      const url =
-        role === "admin"
-          ? `${process.env.REACT_APP_API_BASE_URL}/admin/dashboard`
-          : role === "admin"
-          ? `${process.env.REACT_APP_API_BASE_URL}/dashboard`
-          : `${process.env.REACT_APP_API_BASE_URL}/agent/dashboard`;
-      const { data } = await axios.get(`${url}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      setStatsData(data);
-    } catch (err) {
-      console.error("Dashboard load failed", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  
+  
 
   useEffect(() => {
-    console.log("🏠 Dashboard loaded");
-    fetchDashboardStats();
-  }, []);
+    const fetchDashboardStats = async () => {
+      try {
+        const url =
+          role === "admin"
+            ? `${process.env.REACT_APP_API_BASE_URL}/admin/dashboard`
+            : role === "admin"
+            ? `${process.env.REACT_APP_API_BASE_URL}/dashboard`
+            : `${process.env.REACT_APP_API_BASE_URL}/agent/dashboard`;
+        const { data } = await axios.get(`${url}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setStatsData(data);
+      } catch (err) {
+        console.error("Dashboard load failed", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboardStats();    
+  }, [role, token]);
 
   return (
     <>

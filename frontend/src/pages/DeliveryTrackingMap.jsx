@@ -7,6 +7,8 @@ const containerStyle = {
   height: "500px",
 };
 
+const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GMAP_API_KEY
+
 const DeliveryTrackingMap = () => {
   const { parcelId } = useParams();
   const [location, setLocation] = useState(null);

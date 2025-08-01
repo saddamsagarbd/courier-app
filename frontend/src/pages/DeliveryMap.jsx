@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   GoogleMap,
-  LoadScript,
   DirectionsService,
   DirectionsRenderer,
 } from "@react-google-maps/api";
@@ -28,7 +27,7 @@ const DeliveryMapPage = () => {
     if (parcelId) {
       fetchParcelsById(parcelId);
     }
-  }, [parcelId]);
+  }, [parcelId, fetchParcelsById]);
 
   if (!parcel || !parcel.deliveryAddress) return <p>Loading map...</p>;
 

@@ -24,3 +24,12 @@ export const dashBoardStates = async (req, res) => {
     res.status(500).json({ message: "Dashboard fetch failed" });
   }
 };
+
+export const getAgents = async (req, res) => {
+  try {
+    const agents = await User.find({ role: "agent" }).select("-password");
+    res.json(agents);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch agents" });
+  }
+};

@@ -98,7 +98,7 @@ export const ParcelProvider = ({ children }) => {
 
   const fetchAgents = async () => {
     const { data } = await axios.get(
-      `${process.env.REACT_APP_API_BASE_URL}/parcels/agents`,
+      `${process.env.REACT_APP_API_BASE_URL}/agent/get-agents`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -106,6 +106,7 @@ export const ParcelProvider = ({ children }) => {
         },
       }
     );
+    console.log(data);
     setAgents(data);
   };
   const assignAgent = async (parcelId, agentId) => {
@@ -124,11 +125,11 @@ export const ParcelProvider = ({ children }) => {
       console.error("Agent assignment failed", error);
     }
   };
-  const updateParcelStatus = async (parcelId, status) => {
+  const updateParcelStatus = async (parcelId, status, location=null) => {
     try {
       await axios.put(
         `${process.env.REACT_APP_API_BASE_URL}/parcels/${parcelId}/update-status`,
-        { status },
+        { status, location },
         {
           headers: {
             "Content-Type": "application/json",
@@ -144,6 +145,7 @@ export const ParcelProvider = ({ children }) => {
   return (
     <ParcelContext.Provider
       value={{
+        setParcels,
         parcels,
         parcel,
         agents,

@@ -1,12 +1,48 @@
 import { useEffect } from "react";
 import { useParcel } from "../context/ParcelContext";
+import io from "socket.io-client";
+import { useNavigate } from "react-router-dom";
+
+const socket = io("http://localhost:5000", {
+  withCredentials: true,
+});
 
 const MyBookings = () => {
-  const { parcels, fetchMyParcels, loading, error } = useParcel();
+  const navigate = useNavigate();
+  const { parcels, fetchMyParcels, loading, error, setParcels } = useParcel();
 
   useEffect(() => {
     fetchMyParcels();
   }, []);
+
+  useEffect(() => {
+    if (parcels.length > 0) {
+      parcels.forEach(parcel => {
+        socket.emit("joinParcelRoom", parcel._id);
+      });
+    }
+  }, [parcels]);
+
+  useEffect(() => {
+    socket.on("parcelStatusUpdate", ({ parcelId, status, location }) => {
+      console.log("Status updated for:", parcelId);
+      setParcels(prev =>
+        prev.map(p =>
+          p._id === parcelId
+            ? { ...p, status, currentLocation: location || p.currentLocation }
+            : p
+        )
+      );
+    });
+
+    return () => {
+      socket.off("parcelStatusUpdate");
+    };
+  }, []);
+
+  const handleParcelTracking = async (parcelId) => {
+    navigate(`/track-parcel/${parcelId}`);
+  };
 
   return (
     <div className="max-w-5xl mx-auto p-6">
@@ -27,7 +63,7 @@ const MyBookings = () => {
                 Parcel to {parcel.recipientName}({parcel.recipientPhone})
               </h3>
               <span className="px-2 py-1 text-sm rounded bg-blue-100 text-blue-600">
-                {parcel.status}
+                {parcel.status.toUpperCase()}
               </span>
             </div>
             <p>
@@ -52,6 +88,13 @@ const MyBookings = () => {
             )}
             <p className="text-gray-500 text-sm mt-2">
               Booked on {new Date(parcel.createdAt).toLocaleString()}
+            </p>
+            <p className="text-gray-500 text-sm mt-2">
+              <button 
+              className="bg-blue-600 text-white px-4 py-2 rounded text-sm" 
+              onClick={() => handleParcelTracking(parcel._id)}>
+                Track Parcel
+              </button>
             </p>
           </div>
         ))}
