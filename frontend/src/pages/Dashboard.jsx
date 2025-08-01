@@ -18,7 +18,9 @@ const Dashboard = () => {
       const url =
         role === "admin"
           ? `${process.env.REACT_APP_API_BASE_URL}/admin/dashboard`
-          : `${process.env.REACT_APP_API_BASE_URL}/dashboard`;
+          : role === "admin"
+          ? `${process.env.REACT_APP_API_BASE_URL}/dashboard`
+          : `${process.env.REACT_APP_API_BASE_URL}/agent/dashboard`;
       const { data } = await axios.get(`${url}`, {
         headers: {
           Authorization: `Bearer ${token}`,

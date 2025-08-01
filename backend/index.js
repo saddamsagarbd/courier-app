@@ -61,10 +61,12 @@ import authRoute from "./routes/authRoutes.js";
 import parcelRoutes from "./routes/parcelRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import userRoutes from "./routes/userRoute.js";
+import agentRoutes from "./routes/agentRoutes.js";
 app.use("/api", userRoutes);
 app.use("/api/auth", authRoute);
 app.use("/api/parcels", parcelRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/agent", agentRoutes);
 
 // Server
 const PORT = process.env.PORT || 5000;

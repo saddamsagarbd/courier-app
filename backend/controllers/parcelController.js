@@ -55,15 +55,37 @@ export const getBookingByUser = async (req, res) => {
 
 export const bookedParcels = async (req, res) => {
   try {
-    // const parcels = await Parcel.find({ status: "pending" });
-    const {status} = req.query;
+    const statuses = [
+      "assigned",
+      "picked-up",
+      "in-transit",
+      "delivered",
+      "failed",
+    ];
+    const { status } = req.query;
 
     const parcels = status
-      ? await Parcel.find({ status })
+      ? status === "assigned"
+        ? await Parcel.find({ status })
+        : await Parcel.find({ status: { $in: statuses } })
       : await Parcel.find();
     res.json(parcels);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch parcels" });
+  }
+};
+
+export const getParcelById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const parcel = await Parcel.findById(id);
+    if (!parcel) {
+      return res.status(404).json({ message: "Parcel not found" });
+    }
+    console.log(parcel);
+    res.json(parcel);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch parcel" });
   }
 };
 export const getAgents = async (req, res) => {
@@ -71,7 +93,7 @@ export const getAgents = async (req, res) => {
     const agents = await User.find({ role: "agent" }).select("-password");
     res.json(agents);
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch parcels" });
+    res.status(500).json({ message: "Failed to fetch agents" });
   }
 };
 
@@ -93,4 +115,32 @@ export const assignAgent = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Failed to assign agent", error: err });
   }
+};
+export const updateParcelStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    const parcel = await Parcel.findById(id);
+    if (!parcel) return res.status(404).json({ message: "Parcel not found" });
+
+    parcel.status = status;
+    await parcel.save();
+
+    res
+      .status(200)
+      .json({ message: "Parcel Status updated successfully", parcel });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to update status", error: err });
+  }
+};
+export const getParcelLocation = async (req, res) => {
+  const { parcelId } = req.params;
+  const parcel = await Parcel.findById(parcelId);
+
+  if (!parcel || !parcel.currentLocation) {
+    return res.status(404).json({ message: "No location data" });
+  }
+
+  res.json(parcel.currentLocation);
 };

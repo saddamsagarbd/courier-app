@@ -15,27 +15,39 @@ import MyBookings from "./pages/MyBookings";
 import ManageParcels from "./pages/ManageParcels";
 import NotFound from "./pages/NotFound";
 import Layout from "./pages/Layout";
+import AssignedParcel from "./pages/AssignedParcel";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ParcelRoutes from "./pages/ParcelRoutes";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        {/* Protected routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route element={<Layout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/parcels" element={<ManageParcels />} />
-            <Route path="/book-parcel" element={<ParcelBooking />} />
-            <Route path="/my-parcels" element={<MyBookings />} />
-            <Route path="*" element={<NotFound />} />
+    <>
+      <ToastContainer />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          {/* Protected routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route element={<Layout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/parcels" element={<ManageParcels />} />
+              <Route path="/assigned-parcels" element={<AssignedParcel />} />
+              <Route
+                path="/get-direction/:parcelId"
+                element={<ParcelRoutes />}
+              />
+              <Route path="/book-parcel" element={<ParcelBooking />} />
+              <Route path="/my-parcels" element={<MyBookings />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
           </Route>
-        </Route>
-        {/* Catch-all */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
+          {/* Catch-all */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Router>
+    </>
   );
 }
 

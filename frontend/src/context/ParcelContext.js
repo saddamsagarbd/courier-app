@@ -5,6 +5,7 @@ const ParcelContext = createContext();
 
 export const ParcelProvider = ({ children }) => {
   const [parcels, setParcels] = useState([]);
+  const [parcel, setParcel] = useState([]);
   const [agents, setAgents] = useState([]);
   const [totalParcels, setTotalParcels] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -69,6 +70,31 @@ export const ParcelProvider = ({ children }) => {
     );
     setParcels(data);
   };
+  const fetchParcelsById = async (parcelId) => {
+    const { data } = await axios.get(
+      `${process.env.REACT_APP_API_BASE_URL}/parcels/${parcelId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    console.log(data);
+    setParcel(data);
+  };
+  const fetchAssignedParcels = async () => {
+    const { data } = await axios.get(
+      `${process.env.REACT_APP_API_BASE_URL}/parcels/booked?status=all`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    setParcels(data);
+  };
 
   const fetchAgents = async () => {
     const { data } = await axios.get(
@@ -81,7 +107,7 @@ export const ParcelProvider = ({ children }) => {
       }
     );
     setAgents(data);
-  }
+  };
   const assignAgent = async (parcelId, agentId) => {
     try {
       await axios.put(
@@ -94,7 +120,22 @@ export const ParcelProvider = ({ children }) => {
           },
         }
       );
-      
+    } catch (error) {
+      console.error("Agent assignment failed", error);
+    }
+  };
+  const updateParcelStatus = async (parcelId, status) => {
+    try {
+      await axios.put(
+        `${process.env.REACT_APP_API_BASE_URL}/parcels/${parcelId}/update-status`,
+        { status },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
     } catch (error) {
       console.error("Agent assignment failed", error);
     }
@@ -104,13 +145,17 @@ export const ParcelProvider = ({ children }) => {
     <ParcelContext.Provider
       value={{
         parcels,
+        parcel,
         agents,
         totalParcels,
         bookParcel,
         fetchMyParcels,
         fetchParcels,
+        fetchAssignedParcels,
         fetchAgents,
         assignAgent,
+        updateParcelStatus,
+        fetchParcelsById,
         loading,
         error,
       }}

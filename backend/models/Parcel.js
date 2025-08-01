@@ -23,8 +23,20 @@ const parcelSchema = new mongoose.Schema({
   specialInstructions: { type: String },
   status: {
     type: String,
-    enum: ["pending", "assigned", "picked-up", "in-transit", "delivered", "failed"],
+    enum: [
+      "pending",
+      "assigned",
+      "picked-up",
+      "in-transit",
+      "delivered",
+      "failed",
+    ],
     default: "pending",
+  },
+  currentLocation: {
+    lat: Number,
+    lng: Number,
+    updatedAt: Date,
   },
   assignedAgent: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   createdAt: { type: Date, default: Date.now },

@@ -16,16 +16,11 @@ export const ROLE_CONFIG = {
   },
   agent: {
     dashboardTitle: "Delivery Agent Dashboard",
-    stats: [
-      { label: "Total Parcels", key: "totalParcels", color: "blue" },
-      { label: "Delivered Today", key: "deliveredToday", color: "green" },
-      { label: "Pending", key: "pendingDeliveries", color: "yellow" },
-    ],
+    stats: [{ label: "Assigned Percels", key: "totalAssigned", color: "blue" }],
     quickActions: [
       { name: "Dashboard", path: "/dashboard" },
-      { name: "My Deliveries", path: "/agent/deliveries" },
-      { name: "Delivery Map", path: "/agent/map" },
-      { name: "Availability", path: "/agent/availability" },
+      { name: "Assigned Parcels", path: "/assigned-parcels" },
+      { name: "Delivery Map", path: "/delivery-map" },
     ],
     recentActivities: [],
   },

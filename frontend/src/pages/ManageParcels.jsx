@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import { toast } from "react-toastify";
 import { useParcel } from "../context/ParcelContext";
 import { AuthContext } from "../context/AuthContext";
 
@@ -15,9 +16,13 @@ export default function ManageParcels() {
   }, []);
 
   const assignDeliveryAgent = async (parcelId, agentId) => {
-    console.log("parcelId", parcelId);
-    await assignAgent(parcelId, agentId);
-    await fetchParcels(); // Refresh the list after assignment
+    try {
+      await assignAgent(parcelId, agentId);
+      toast.success("Agent assigned successfully.");
+      await fetchParcels(); // Refresh the list after assignment
+    } catch (error) {
+      toast.error("Failed to assign agent.");
+    }
   };
 
   return (
