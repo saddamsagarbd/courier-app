@@ -30,6 +30,8 @@ export const dashBoardStates = async (req, res) => {
       ]),
     ]);
 
+    console.log(totalParcels);
+
     res.json({
       totalParcels,
       activeAgents,
