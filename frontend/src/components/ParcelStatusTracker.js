@@ -1,7 +1,9 @@
 import io from "socket.io-client";
 import { useEffect } from "react";
 
-const socket = io(process.env.REACT_APP_API_BASE_URL);
+const socket = io(process.env.REACT_APP_API_BASE_URL, {
+    withCredentials: true,
+});
 
 export default function ParcelStatusTracker({ parcelId }) {
     useEffect(() => {

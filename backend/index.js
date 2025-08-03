@@ -46,7 +46,7 @@ app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
 // Create HTTP server and Socket.IO with auth
 const server = http.createServer(app);
-const io = initSocket(server, process.env.FRONTEND_URL);
+const io = initSocket(server, allowedOrigins);
 socketHandler(io);
 
 // DB connection

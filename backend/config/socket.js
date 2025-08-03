@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 let io = null;
 
 export const initSocket = (server, allowedOrigins = "*") => {
+    console.log("Socket allowed origins:", allowedOrigins);
     io = new Server(server, {
         cors: {
             origin: allowedOrigins,
