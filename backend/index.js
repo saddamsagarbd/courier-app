@@ -24,7 +24,11 @@ const app = express();
 app.use(helmet());
 app.use(cookieParser());
 
-const allowedOrigins = [process.env.FRONTEND_URL];
+const allowedOrigins = [
+  process.env.FRONTEND_URL, 
+  "https://frontend-courier-app.netlify.app/",
+  "http://localhost:3000"
+];
 
 app.use(
   cors({
