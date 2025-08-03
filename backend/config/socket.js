@@ -8,8 +8,9 @@ export const initSocket = (server, allowedOrigins = "*") => {
         cors: {
             origin: allowedOrigins,
             credentials: true,
-            methods: ["GET", "POST"],
+            methods: ["GET", "POST", "OPTIONS"],
         },
+        transports: ["websocket", "polling"]
     });
     io.on("connection", (socket) => {
         console.log("Client connected:", socket.id);
