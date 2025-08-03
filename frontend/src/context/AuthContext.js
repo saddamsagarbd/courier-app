@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }) => {
       {
         headers: {
           "Content-Type": "application/json",
+          "Accept": "application/json"
         },
         withCredentials: true, // important if you're using sessions/cookies
       }

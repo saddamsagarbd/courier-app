@@ -26,24 +26,40 @@ app.use(cookieParser());
 
 const allowedOrigins = [
   process.env.FRONTEND_URL, 
-  "https://frontend-courier-app.netlify.app/",
+  "https://frontend-courier-app.netlify.app",
   "http://localhost:3000"
 ];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
+      if (!origin) return callback(null, true); // Allow non-browser requests
+      
+      // More flexible origin matching
+      if (allowedOrigins.some(allowedOrigin => 
+        origin === allowedOrigin || 
+        origin.startsWith(allowedOrigin.replace(/\/$/, '')) || // Handle trailing slashes
+        origin.includes('netlify.app') // Allow all Netlify subdomains
+      )) {
+        return callback(null, true);
       }
+      
+      console.warn(`Blocked CORS request from: ${origin}`);
+      callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+    exposedHeaders: ['set-cookie', 'Authorization']
   })
 );
+
+// Additional security headers
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Expose-Headers', 'set-cookie, Authorization');
+  next();
+});
 
 // Body parsers
 app.use(express.json({ limit: "10kb" }));
