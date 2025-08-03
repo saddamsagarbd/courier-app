@@ -24,7 +24,7 @@ const app = express();
 app.use(helmet());
 app.use(cookieParser());
 
-const allowedOrigins = ["http://localhost:3000"];
+const allowedOrigins = [process.env.FRONTEND_URL];
 
 app.use(
   cors({
