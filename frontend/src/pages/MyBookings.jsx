@@ -3,7 +3,7 @@ import { useParcel } from "../context/ParcelContext";
 import io from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 
-const socket = io("http://localhost:5000", {
+const socket = io(process.env.REACT_APP_BASE_URL, {
   withCredentials: true,
 });
 
