@@ -30,28 +30,20 @@ const allowedOrigins = [
   "http://localhost:3000"
 ];
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true); // Allow non-browser requests
-      
-      // More flexible origin matching
-      if (allowedOrigins.some(allowedOrigin => 
-        origin === allowedOrigin || 
-        origin.startsWith(allowedOrigin.replace(/\/$/, '')) || // Handle trailing slashes
-        origin.includes('netlify.app') // Allow all Netlify subdomains
-      )) {
-        return callback(null, true);
-      }
-      
-      console.warn(`Blocked CORS request from: ${origin}`);
+const corsOptions = {
+  origin: function (origin, callback) {
+
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn("CORS Blocked Origin:", origin);
       callback(new Error("Not allowed by CORS"));
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-  })
-);
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
 
 // Additional security headers
 app.use((req, res, next) => {

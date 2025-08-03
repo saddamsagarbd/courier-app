@@ -21,7 +21,6 @@ export const ParcelProvider = ({ children }) => {
         {
           headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
@@ -65,7 +64,6 @@ export const ParcelProvider = ({ children }) => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
@@ -78,7 +76,6 @@ export const ParcelProvider = ({ children }) => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
@@ -92,7 +89,6 @@ export const ParcelProvider = ({ children }) => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
@@ -106,7 +102,6 @@ export const ParcelProvider = ({ children }) => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
@@ -122,7 +117,6 @@ export const ParcelProvider = ({ children }) => {
         {
           headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
@@ -139,7 +133,6 @@ export const ParcelProvider = ({ children }) => {
         {
           headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
