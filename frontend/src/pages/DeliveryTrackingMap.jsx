@@ -24,7 +24,10 @@ const DeliveryTrackingMap = () => {
   }, [parcelId]);
 
   return (
-    <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY}>
+    <LoadScript 
+      googleMapsApiKey={GOOGLE_MAPS_API_KEY}
+      libraries={['places', 'geometry']}
+    >
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={location || { lat: 23.8103, lng: 90.4125 }}
